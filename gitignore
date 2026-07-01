@@ -1,0 +1,58 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment and secrets
+.env
+.env.*
+*.env
+secrets.*
+*.key
+*.pem
+.huggingface/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Hugging Face / model cache
+.cache/
+huggingface/
+
+# Training logs
+runs/
+wandb/
+logs/
+
+# Model checkpoints and local model outputs
+checkpoint-*/
+checkpoints/
+*-emotion-results/
+llama3-emotion-results/
+mistral-emotion-results/
+berturk_final/
+electra_final/
+
+# Large model files
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# Generated evaluation outputs
+*_classification_report.csv
+*_wrong_predictions.csv
+classification_report*.csv
+wrong_predictions*.csv
+
+# OS files
+.DS_Store
+Thumbs.db
