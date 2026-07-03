@@ -31,21 +31,6 @@ Proje kapsamında:
 
 ---
 
-## Dosya Yapısı 📁
-
-```text
-.
-├── app.ipynb                 # Eğitilmiş modellerle tahmin arayüzü
-├── berturk_electra.ipynb     # BERTurk ve ELECTRA eğitim/değerlendirme notebooku
-├── llama.ipynb               # LLaMA-3 LoRA eğitim/değerlendirme notebooku
-├── mistral.ipynb             # Mistral LoRA eğitim/değerlendirme notebooku
-├── requirements.txt          # Gerekli Python kütüphaneleri
-├── .gitignore                # GitHub'a eklenmemesi gereken dosyalar
-└── README.md                 # Proje açıklaması
-```
-
----
-
 ## Kullanılan Modeller 🤖
 
 | Model | Tür | Kullanım |
@@ -59,6 +44,22 @@ Arayüz notebookunda kullanılan eğitilmiş model adresleri kod içinde verilmi
 
 ---
 
+## Veri Seti
+
+Projede kullanılan veri seti Hugging Face üzerinden indirilmektedir. Notebooklarda veri seti aşağıdaki kod ile alınmaktadır:
+
+```python
+dataset_path = hf_hub_download(
+    repo_id="nihalenc/turkish-8class-emotion-dataset",
+    filename="turkish-8class-emotion-dataset.csv",
+    repo_type="dataset"
+)
+```
+
+Bu nedenle veri seti dosyasının ayrıca manuel olarak yüklenmesine gerek yoktur. Veri setine erişim için Hugging Face bağlantısının çalışır durumda olması gerekmektedir.
+
+---
+
 ## Kurulum ⚙️
 
 Projeyi çalıştırmadan önce gerekli paketler yüklenmelidir:
@@ -69,13 +70,15 @@ pip install -r requirements.txt
 
 Colab veya Kaggle ortamı kullanılıyorsa notebookların ilk hücrelerinde yer alan kurulum komutları çalıştırılmalıdır.
 
+GPU kullanımı özellikle LLaMA ve Mistral modelleri için gereklidir. Colab ortamında çalışma zamanı türü GPU olarak seçilmelidir.
+
 ---
 
 ## Hugging Face Erişimi
 
 Bazı modellerin kullanılabilmesi için Hugging Face hesabı gerekebilir.
 
-Özellikle LLaMA modeli gated olduğu için:
+LLaMA modeli gated olduğu için:
 
 1. Hugging Face hesabında ilgili modele erişim izni bulunmalıdır.
 2. Colab kullanılıyorsa Hugging Face token değeri Colab Secrets içine eklenmelidir.
@@ -85,45 +88,55 @@ Bazı modellerin kullanılabilmesi için Hugging Face hesabı gerekebilir.
 hf_token = userdata.get("hf")
 ```
 
-Token değeri doğrudan notebook içine yazılmamalıdır.
+Eğitim notebooklarında modellerin Hugging Face Hub'a kaydedilmesi için repo adresleri kod içinde verilmiştir. Kendi modellerini farklı bir Hugging Face hesabına kaydetmek isteyen kullanıcıların ilgili repo adreslerini değiştirmesi gerekmektedir.
 
 ---
 
 ## Notebookların Kullanımı 🚀
 
-### 1. Arayüz notebooku
+Projede iki farklı kullanım seçeneği bulunmaktadır.
 
-Hazır eğitilmiş modellerle tahmin yapmak için aşağıdaki notebook kullanılmalıdır:
+### 1. Hazır Eğitilmiş Modellerle Tahmin Yapma
+
+Hazır eğitilmiş modellerle tahmin yapmak için aşağıdaki notebook çalıştırılmalıdır:
 
 ```text
 app.ipynb
 ```
 
-Bu notebookta kullanıcıdan bir metin alınır ve seçilen model ile duygu tahmini yapılır.
+Bu notebookta kullanıcıdan bir metin alınır ve seçilen model ile duygu tahmini yapılır. Hazır modeller Hugging Face üzerinden yüklenmektedir.
 
-### 2. BERTurk ve ELECTRA eğitimi
+### 2. Modelleri Yeniden Eğitme
+
+Modelleri yeniden eğitmek için ilgili eğitim notebookları çalıştırılmalıdır:
 
 ```text
 berturk_electra.ipynb
-```
-
-Bu notebook BERTurk ve ELECTRA modellerinin eğitim, test ve karşılaştırma adımlarını içerir.
-
-### 3. LLaMA eğitimi
-
-```text
 llama.ipynb
-```
-
-Bu notebook LLaMA-3 8B modelinin LoRA/QLoRA ile eğitilmesi ve değerlendirilmesi için hazırlanmıştır.
-
-### 4. Mistral eğitimi
-
-```text
 mistral.ipynb
 ```
 
-Bu notebook Mistral 7B modelinin LoRA/QLoRA ile eğitilmesi ve değerlendirilmesi için hazırlanmıştır.
+BERTurk ve ELECTRA modelleri daha düşük kaynaklarla çalıştırılabilir. LLaMA ve Mistral notebookları için GPU kullanılması gereklidir.
+
+---
+
+## Notebook İçerikleri
+
+### `app.ipynb`
+
+Hazır eğitilmiş modellerin arayüz üzerinden kullanılması için hazırlanmıştır. Kullanıcıdan alınan metin seçilen modele gönderilir ve duygu sınıfı tahmin edilir.
+
+### `berturk_electra.ipynb`
+
+BERTurk ve ELECTRA modellerinin eğitim, test ve karşılaştırma adımlarını içerir.
+
+### `llama.ipynb`
+
+LLaMA-3 8B modelinin LoRA/QLoRA ile eğitilmesi ve değerlendirilmesi için hazırlanmıştır.
+
+### `mistral.ipynb`
+
+Mistral 7B modelinin LoRA/QLoRA ile eğitilmesi ve değerlendirilmesi için hazırlanmıştır.
 
 ---
 
@@ -132,14 +145,14 @@ Bu notebook Mistral 7B modelinin LoRA/QLoRA ile eğitilmesi ve değerlendirilmes
 - BERTurk ve ELECTRA daha düşük kaynaklarla çalıştırılabilir.
 - LLaMA ve Mistral için GPU kullanılması gereklidir.
 - LLM modellerinde 4-bit quantization ve LoRA yaklaşımı kullanılmıştır.
-- Model ağırlıkları GitHub'a eklenmemelidir; Hugging Face üzerinde tutulmalıdır.
-- CSV raporları ve checkpoint klasörleri GitHub'a yüklenmemelidir.
+- LLaMA modelinin kullanılabilmesi için Hugging Face hesabında ilgili model erişiminin bulunması gerekir.
+- Notebooklar, veri setini Hugging Face üzerinden indirecek şekilde hazırlanmıştır.
 
 ---
 
 ## Çıktılar
 
-Notebooklar çalıştırıldığında aşağıdaki çıktılar üretilebilir:
+Notebooklar çalıştırıldığında aşağıdaki çıktılar üretilir:
 
 - Classification report
 - Confusion matrix
@@ -147,7 +160,6 @@ Notebooklar çalıştırıldığında aşağıdaki çıktılar üretilebilir:
 - Inference time ölçümü
 - Eğitilmiş model/checkpoint klasörleri
 
-Bu çıktılar deney takibi için kullanılabilir, ancak GitHub reposuna eklenmeleri önerilmez.
 
 ---
 
